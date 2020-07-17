@@ -1,0 +1,60 @@
+#base{
+    width:400px;
+}
+
+#base button{
+    width:100px;
+    height:30px;
+    outline:none;
+    background:white;
+    border:2px solid #777;
+    border-radius:4px;
+    cursor:pointer;
+    margin-top:10px;
+    margin-bottom:10px;
+    margin-right:10px;
+}
+
+#base button:hover{
+    border:2px solid #333;
+    font-weight:bold;
+}
+
+#base li{
+    word-wrap:break-all;
+    overflow-wrap: break-word;
+}
+
+#base .domain{
+    height:40px;
+    line-height:40px;
+    padding-left:10px;
+    position:relative;
+    cursor:pointer;
+}
+
+#base .domain:hover{
+    border:1px solid #777;
+    font-weight:bold;
+}
+
+#base .domain .domain-name{
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    white-space: nowrap;
+}
+
+#base .domain .domain-amount{
+    float:right;
+    z-index:1000;
+}
+
+#base  .title{
+    font-weight:bold;
+}
+
+#base .name{
+    font-style:italic;
+}
