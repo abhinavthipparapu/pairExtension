@@ -1,34 +1,17 @@
-/**
- * The view logic object
- */
-var View = (function () {
+const View = () =>  {
 
-    // A flag that is true when the data is being loaded
     var is_loading = false;
-
-    // A value that contains the current level
     var current_level = 0;
-
-    // The current view data
     var view_data = {};
-
-    // A function that sets the interval
     setInterval(onUpdate, 1000);
 
-    /**
-     * A function that updates the data in the chrome extension
-     */
-    function onUpdate(){
+    function onUpdate(key) {
         if(current_level === 0 && !is_loading){
             init();
         }
     }
 
-    /**
-     * A function that gets the value in storage
-     * @param {*} key The key to save
-     */
-    function get(key) {
+    const get = key => {
         return new Promise(function (resolve, reject) {
             chrome.storage.local.get(key, function (obj) {
                 if (Array.isArray(key)) {
@@ -43,11 +26,7 @@ var View = (function () {
         })
     }
 
-    /**
-     * A helper function that gets the total number of requests
-     * @param {*} data The data object
-     */
-    function getTotalRequests(data) {
+    const getTotalRequests = data => {
         var c = 0;
         for (var tld in data) {
             var obj = data[tld];
@@ -57,13 +36,7 @@ var View = (function () {
         return c;
     }
 
-    /**
-     * A function that draws the domain view
-     * @param {*} all_data All of the data
-     * @param {*} data The data obj
-     * @param {*} level The level data
-     */
-    function drawDomainView(all_data, data, level) {
+    const drawDomainView = (all_data, data, level) => {
         var total = getTotalRequests(data);
         var el = document.getElementById('base');
         var divs = [];
@@ -115,11 +88,7 @@ var View = (function () {
         return eids;
     }
 
-    /**
-     * A function that handles the clicking of the domain
-     * @param {*} level The level value
-     */
-    function onClickDomain(level){
+    const  onClickDomain = level => {
         return async function (e){
             try{
                 var target = e.target;
@@ -146,13 +115,7 @@ var View = (function () {
         }
     }
 
-    /**
-     * A function that adds the init view
-     * @param {*} info The info to create the request view
-     * @param {*} name The name of the request 
-     * @param {*} level The level in the tree.
-     */
-    async function addRequestView(info, top_name, level){
+    const addRequestView = async (info, top_name, level) => {
         try{
             current_level = level;
 
@@ -219,7 +182,6 @@ var View = (function () {
                             }
                             idiv += '</ul>'
                         }   
-                        //idiv += request[key];
                         idiv += "</li>";
                         div += idiv;
                     }
@@ -249,11 +211,7 @@ var View = (function () {
         }
     }
 
-    /**
-     * A function that handles the back button
-     * @param {*} level The level 
-     */
-    function onBackButton(level){
+    const onBackButton = level => {
         return async function(e){
             try{
                 var obj = view_data[level - 1];
@@ -264,25 +222,16 @@ var View = (function () {
         }
     }
 
-    /**
-     * A function that clears the database
-     */
-    function onClearButton(){
+    const onClearButton = () => {
         chrome.storage.local.clear();
     }
 
-    /**
-     * A function that returns the download name
-     */
-    function _getDownloadName(){
+    const _getDownloadName = () => {
         var d = new Date();
         return d.toISOString();
     }
 
-    /**
-     * A function that downloads the information in the database.
-     */
-    async function onDownloadButton(){
+    const onDownloadButton = async () => {
         try{
             var data = await get(null);
             chrome.extension.getBackgroundPage().console.log(data)
@@ -300,12 +249,7 @@ var View = (function () {
         }
     }
 
-    /**
-     * A function that adds the init view
-     * @param {*} tlds The top level domains
-     * @param {*} level The level 
-     */
-    async function addInitView(tlds, level) {
+    const addInitView = async (tlds, level) => {
         try {
             current_level = level;
 
@@ -335,13 +279,7 @@ var View = (function () {
         }
     }
 
-    /**
-     * A helper function that adds the data to the view
-     * @param {*} all_data The all data array
-     * @param {*} data The data object
-     * @param {*} level The level
-     */
-    function _addInitViewToDOM(all_data, data, level){
+    const _addInitViewToDOM = (all_data, data, level) => {
         var eids = drawDomainView(all_data, data, level);
         for(var k = 0; k < eids.length; k++){
             var eid = eids[k];
@@ -352,13 +290,11 @@ var View = (function () {
             }
         }
 
-        // The back button
         var el = document.getElementById('backButton');
         if(el){
             el.addEventListener('click', onBackButton(level));
         }
 
-        // The clear button
         el = document.getElementById('clearButton');
         if(el){
             el.addEventListener('click', onClearButton);
@@ -370,10 +306,7 @@ var View = (function () {
         }
     }
 
-    /**
-     * A function that initializes the state of the view
-     */
-    async function init() {
+    const init = async () => {
         try {
             is_loading = true;
             var tld_data = await get('tlds');
@@ -392,9 +325,7 @@ var View = (function () {
     return {
         init: init
     }
-})();
+}
 
-//The DOMContentLoaded event fires when the initial HTML document has been completely loaded
-//and parsed, without waiting for stylesheets, images, and subframes to finish loading.
-
+View()
 document.addEventListener('DOMContentLoaded', View.init);
