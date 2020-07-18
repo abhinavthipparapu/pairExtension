@@ -1,10 +1,8 @@
 {
-"update_url": "https://clients2.google.com/service/update2/crx",
-
-    "name":"General Data Monitor",
-    "version":"0.2",
+    "name":"Data Distribution",
+    "version":"0.1.0",
     "description":"A complete monitoring tool for your browser activity",
-    "author":"General Data",
+    "author":"Unknown",
     "background": {
         "scripts": ["background.js"],
         "persistent": true
@@ -18,7 +16,8 @@
         "downloads"
     ],
     "browser_action": {
-        "default_popup": "view.html"
+        "default_popup": "view.html",
+        "default_title": "An asshole"
     },
     "icons": { "16": "images/icon_16.png",
         "48": "images/icon_48.png",

@@ -66,55 +66,53 @@ var View = (function () {
     function drawDomainView(all_data, data, level) {
         var total = getTotalRequests(data);
         var el = document.getElementById('base');
-        if (el) {
-            var divs = [];
-            var eids = [];
-            for (var k = 0; k < all_data.length; k++) {
-                var d = all_data[k];
-                var percent = d['count'] / total;
-                var rpercent = d['count'] / (1.2 * all_data[0]['count']);
-                var fcolor, color;
-                if (percent > 0.2) {
-                    fcolor = 'black';
-                    color = "#FA6767";
-                } else if (percent > 0.1) {
-                    color = '#ffe26c';
-                    fcolor = 'black';
-                } else if (percent > 0.05) {
-                    color = '#00cc00';
-                    fcolor = 'black';
-                } else {
-                    color = '#ccc';
-                    fcolor = 'black';
-                }
-                var name = d['name'];
-                var eid = 'tld_' + name;
-                eids.push(eid);
-                var right = 400 * (1.0 - rpercent);
-                var style = 'background-color:' + color + ';color:' + fcolor + ';right:' + right + 'px;';
-                var html = "<div class='domain' id='" + eid + "'>";
-                percent *= 100;
-                name = name.replace(/\s/g, "") + ' (' + d['count'] + ')';
-                html += "<div class='domain-name' style='" + style + "'>&nbsp;&nbsp;" + name + "</div>";
-                html += "<div class='domain-amount'>" + percent.toFixed(1) + "%</div>";
-                html += '</div>';
-                divs.push(html);
+        var divs = [];
+        var eids = [];
+        for (var k = 0; k < all_data.length; k++) {
+            var d = all_data[k];
+            var percent = d['count'] / total;
+            var rpercent = d['count'] / (1.2 * all_data[0]['count']);
+            var fcolor, color;
+            if (percent > 0.2) {
+                fcolor = 'black';
+                color = "#FA6767";
+            } else if (percent > 0.1) {
+                color = '#ffe26c';
+                fcolor = 'black';
+            } else if (percent > 0.05) {
+                color = '#00cc00';
+                fcolor = 'black';
+            } else {
+                color = '#ccc';
+                fcolor = 'black';
             }
-            var html = '<p> Below is a list of domains ordered by the number of requests sent from your Chrome browser. Click any of them to get more information.</p>';
-            if(divs.length > 0){
-                if(level !== 0){
-                    html += "<button id='backButton'>Back</button>";
-                }else{
-                    html += "<button id='clearButton'>Clear</button>";
-                    html += "<button id='downloadButton'>Download</button>";
-                }
-                html += divs.join('');
-            }else{
-                html += "<p>Processing data...</p>"
-            }
-            el.innerHTML = html;
-            return eids;
+            var name = d['name'];
+            var eid = 'tld_' + name;
+            eids.push(eid);
+            var right = 400 * (1.0 - rpercent);
+            var style = 'background-color:' + color + ';color:' + fcolor + ';right:' + right + 'px;';
+            var html = "<div class='domain' id='" + eid + "'>";
+            percent *= 100;
+            name = name + ' (' + d['count'] + ')';
+            html += "<div class='domain-name' style='" + style + "'>&nbsp;&nbsp;" + name + "</div>";
+            html += "<div class='domain-amount'>" + percent.toFixed(1) + "%</div>";
+            html += '</div>';
+            divs.push(html);
         }
+        var html = '<p> Below is a list of domains ordered by the number of requests sent from your Chrome browser. Click any of them to get more information.</p>';
+        if(divs.length > 0){
+            if(level !== 0){
+                html += "<button id='backButton'>Back</button>";
+            }else{
+                html += "<button id='clearButton'>Clear</button>";
+                html += "<button id='downloadButton'>Download</button>";
+            }
+            html += divs.join('');
+        }else{
+            html += "<p>Processing data...</p>"
+        }
+        el.innerHTML = html;
+        return eids;
     }
 
     /**
@@ -325,15 +323,9 @@ var View = (function () {
                     all_data.push(d);
                 }
             }
-            all_data.sort(function (a, b) {
-                if (a['count'] < b['count']) {
-                    return 1;
-                } else if (a['count'] > b['count']) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            });
+            all_data.sort( (a, b) =>
+                b['count'] - a['count']
+            );
             view_data[level] = {'all_data':all_data, 'data':data};
             _addInitViewToDOM(all_data, data, level);
             
@@ -401,5 +393,8 @@ var View = (function () {
         init: init
     }
 })();
+
+//The DOMContentLoaded event fires when the initial HTML document has been completely loaded
+//and parsed, without waiting for stylesheets, images, and subframes to finish loading.
 
 document.addEventListener('DOMContentLoaded', View.init);

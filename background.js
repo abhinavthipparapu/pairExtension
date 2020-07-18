@@ -151,7 +151,7 @@ var GeneralData = (function () {
                 if(deleting){
                     return;
                 }
-                if(!deleting){
+                else{
                     deleting = true;
                 }
                 chrome.storage.local.remove(delete_queue, function(){
@@ -208,6 +208,10 @@ var GeneralData = (function () {
                         var obj = JSON.parse(first);
                         var url = obj['initiator'];
                         tld = getTLD(url);
+
+                        // console.log(Object.values(tld))
+                        // console.log(url)
+
                         var domains = getDomains(url);
                         // Handle the base case
                         var cnt_obj = await getDomainFromStorage(tld);
@@ -257,7 +261,10 @@ var GeneralData = (function () {
                 if(tlds.indexOf(tld) === -1){
                     tlds.push(tld);
                 }
+                // console.log(tlds)
                 await set('tlds', JSON.stringify(tlds));
+                // const test = await get(tlds[0])
+                // console.log(test)
             }
 
             // Process the information for the histogram
@@ -279,6 +286,7 @@ var GeneralData = (function () {
      * @param {*} name The name
      */
     function _cacheRequest(details, name) {
+        // console.log(Object.keys(details),Object.values(details))
         var request_id = details['request_id'];
         if (!cache.hasOwnProperty(request_id)) {
             cache[request_id] = {};
@@ -287,6 +295,7 @@ var GeneralData = (function () {
             cache[request_id][name] = []
         }
         cache[request_id][name].push(JSON.stringify(details));
+        // console.log('cache = ' + cache)
     }
 
     /**
@@ -304,7 +313,7 @@ var GeneralData = (function () {
      * A function that handles a request before it happens
      * @param {*} details The details object
      */
-    function onBeforeRequest(details) {
+    function  onBeforeRequest(details) {
         _cacheRequest(details, 'onBeforeRequest');
     }
 
@@ -396,3 +405,32 @@ chrome.webRequest.onBeforeRedirect.addListener(GeneralData.onBeforeRedirect, { u
 chrome.webRequest.onResponseStarted.addListener(GeneralData.onResponseStarted, { urls: ["<all_urls>"] }, ["responseHeaders", "extraHeaders"]);
 chrome.webRequest.onCompleted.addListener(GeneralData.onComplete, { urls: ["<all_urls>"] }, ["responseHeaders"]);
 chrome.webRequest.onErrorOccurred.addListener(GeneralData.onErrorOccurred, { urls: ["<all_urls>"] });
+
+// onBeforeRequest (optionally synchronous)
+// Fires when a request is about to occur
+
+// onBeforeSendHeaders (optionally synchronous)
+// Fires when a request is about to occur and the initial headers have been prepared.
+// The event is intended to allow extensions to add, modify, and delete request headers 
+
+// onSendHeaders
+// Fires after all extensions have had a chance to modify the request headers, and
+// presents the final (*) version. The event is triggered before the headers are sent to the network.
+
+// onHeadersReceived (optionally synchronous)
+// Fires each time that an HTTP(S) response header is received. Due to redirects and
+// authentication requests this can happen multiple times per request.
+
+// onBeforeRedirect
+// Fires when a redirect is about to be executed. A redirection can be triggered
+// by an HTTP response code or by an extension. 
+
+// onResponseStarted
+// Fires when the first byte of the response body is received.
+// For HTTP requests, this means that the status line and response headers are available.
+
+// onCompleted
+// Fires when a request has been processed successfully.
+
+// onErrorOccurred
+// Fires when a request could not be processed successfully.
