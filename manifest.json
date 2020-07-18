@@ -1,7 +1,7 @@
 {
     "name":"Data Distribution",
     "version":"0.1.0",
-    "description":"A complete monitoring tool for your browser activity",
+    "description":"This Extension show's how many requests happening",
     "author":"Unknown",
     "background": {
         "scripts": ["background.js"],
@@ -17,10 +17,7 @@
     ],
     "browser_action": {
         "default_popup": "view.html",
-        "default_title": "An asshole"
+        "default_title": "Anyone"
     },
-    "icons": { "16": "images/icon_16.png",
-        "48": "images/icon_48.png",
-       "128": "images/icon_128.png" },
     "manifest_version": 2
 }
