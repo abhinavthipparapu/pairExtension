@@ -1,28 +1,23 @@
 var GeneralData = (function () {
 
     var processing = false;
-
     var deleting = false;
-
     var queue = [];
-
     var delete_queue = [];
-
     var cache = {};
 
     setInterval(_processQueue, 10);
     setInterval(_deleteQueue, 10);
 
-    function set(key, value) {
+    const set = (key, value) =>  {
         return new Promise(function (resolve, reject) {
             var obj = {};
             obj[key] = value;
             chrome.storage.local.set(obj, resolve);
         })
     }
-
   
-    function get(key) {
+    const get = key => {
         return new Promise(function (resolve, reject) {
             chrome.storage.local.get(key, function (obj) {
                 var val = obj[key];
@@ -31,7 +26,7 @@ var GeneralData = (function () {
         })
     }
 
-    async function getDomainFromStorage(key){
+    const getDomainFromStorage = async key => {
         try{
             var cnt_obj = await get(key);
             if(!cnt_obj){
@@ -50,7 +45,7 @@ var GeneralData = (function () {
         }
     }
 
-    function splitURL(url){
+    const splitURL = url => {
         var domains = url.split('.');
         if(domains.length < 0){
             return;
@@ -61,18 +56,15 @@ var GeneralData = (function () {
         return fd;
     }
 
-
-    function getTLD(url){
+    const getTLD = url =>{
         var domains = splitURL(url);
         if(domains.length < 2){
             return null;
         }
-
         return domains[domains.length - 2] + '.' + domains[domains.length - 1];
     }
 
-
-    function getDomains(url){
+    const getDomains = url =>{
         var domains = splitURL(url);
         if(domains.length < 2){
             return null;
@@ -88,8 +80,7 @@ var GeneralData = (function () {
         return lower_domains;
     }
 
-
-    function addValues(domain_obj, currentCount){
+    const addValues = (domain_obj, currentCount) => {
         if(!domain_obj['values']){
             domain_obj['values'] = [];
         }
@@ -106,7 +97,7 @@ var GeneralData = (function () {
         }
     }
 
-    async function _deleteQueue(){
+    async function _deleteQueue() {
         try{
             if(delete_queue.length > 0){
                 if(deleting){
@@ -218,7 +209,7 @@ var GeneralData = (function () {
         }
     }
 
-    function _cacheRequest(details, name) {
+    const _cacheRequest = (details, name) => {
         var request_id = details['request_id'];
         if (!cache.hasOwnProperty(request_id)) {
             cache[request_id] = {};
@@ -229,47 +220,47 @@ var GeneralData = (function () {
         cache[request_id][name].push(JSON.stringify(details));
     }
 
-    function _addToQueue(details) {
+    const  _addToQueue = (details) => {
         var request_id = details['request_id'];
         var obj = cache[request_id];
         queue.push(obj);
         delete cache[request_id];
     }
 
-    function  onBeforeRequest(details) {
+    const onBeforeRequest = details => {
         _cacheRequest(details, 'onBeforeRequest');
     }
 
-    function onBeforeSend(details) {
+    const  onBeforeSend = details => {
         _cacheRequest(details, 'onBeforeSend');
     }
 
-    function onHeadersReceived(details) {
+    const  onHeadersReceived = details => {
         _cacheRequest(details, 'onHeadersReceived');
     }
 
-    function onSend(details) {
+    const onSend = details => {
         _cacheRequest(details, 'onSend');
     }
 
-    function onAuthRequired(details) {
+    const onAuthRequired = details => {
         _cacheRequest(details, 'onAuthRequired');
     }
 
-    function onBeforeRedirect(details) {
+    const onBeforeRedirect = details => {
         _cacheRequest(details, 'onBeforeRedirect');
     }
 
-    function onResponseStarted(details) {
+    const onResponseStarted = details => {
         _cacheRequest(details, 'onResponseStarted');
     }
 
-    function onComplete(details) {
+    const onComplete = details => {
         _cacheRequest(details, 'onComplete');
         _addToQueue(details);
     }
 
-    function onErrorOccurred(details) {
+    const onErrorOccurred = details => {
         _cacheRequest(details, 'onError');
         _addToQueue(details);
     }
