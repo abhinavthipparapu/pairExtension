@@ -40,12 +40,13 @@
     padding-left:10px;
     position:relative;
     cursor:pointer;
+    border-radius: 5px;
 }
 
 #base .domain:hover{
     border:1px solid rgb(199, 199, 199);
     font-weight:bold;
-    background-color: white;
+    border-radius: 5px;
 }
 
 #base .domain .domain-name{

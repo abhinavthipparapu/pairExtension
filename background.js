@@ -145,9 +145,11 @@ var GeneralData = (function () {
 
             await set(currentCount, data);
             var keys = Object.keys(data).sort();
+            // console.log(data)
             var tld;
             if(keys.length > 0){
                 var arr = data[keys[0]];
+                // console.log(keys[0])
                 if(arr.length > 0){
                     var first = arr[0];
                     try{

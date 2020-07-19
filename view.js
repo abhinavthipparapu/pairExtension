@@ -56,14 +56,14 @@ const View = () =>  {
                 color = '#00cc00';
                 fcolor = 'black';
             } else {
-                color = '#ccc';
+                color = 'rgb(34, 126, 121)';
                 fcolor = 'black';
             }
             var name = d['name'];
             var eid = 'tld_' + name;
             eids.push(eid);
             var right = 400 * (1.0 - rpercent);
-            var style = 'background-color:' + color + ';color:' + fcolor + ';right:' + right + 'px;';
+            var style = 'background-color:' + color + ';color:' + fcolor + ';right:' + right + 'px;' + 'margin-top:5px;' + 'border-radius:5px';
             var html = "<div class='domain' id='" + eid + "'>";
             percent *= 100;
             name = name + ' (' + d['count'] + ')';
@@ -78,7 +78,7 @@ const View = () =>  {
                 html += "<button id='backButton'>Back</button>";
             }else{
                 html += "<button id='clearButton'>Clear</button>";
-                html += "<button id='downloadButton'>Download</button>";
+                html += "<button style= float:right id='downloadButton'>Download</button>";
             }
             html += divs.join('');
         }else{
