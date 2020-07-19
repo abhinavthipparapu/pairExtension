@@ -68,11 +68,11 @@ const View = () =>  {
             percent *= 100;
             name = name + ' (' + d['count'] + ')';
             html += "<div class='domain-name' style='" + style + "'>&nbsp;&nbsp;" + name + "</div>";
-            html += "<div class='domain-amount'>" + percent.toFixed(1) + "%</div>";
+            html += "<div class='domain-amount'>" + percent.toFixed(2) + "%</div>";
             html += '</div>';
             divs.push(html);
         }
-        var html = '<p> Below is a list of domains ordered by the number of requests sent from your Chrome browser. Click any of them to get more information.</p>';
+        var html = '<p> Below is a list of domains. Click any of them to get more information.</p>';
         if(divs.length > 0){
             if(level !== 0){
                 html += "<button id='backButton'>Back</button>";
@@ -195,7 +195,7 @@ const View = () =>  {
 
             var el = document.getElementById('base');
             if(el){
-                var html = '<p> Below is the last 200 requests (or less) that were initiated by the domain you clicked.</p>';
+                var html = '<p> Below is the list of 200 requests</p>';
                 html += "<button id='backButton'>Back</button>";
                 html += divs.join('');
                 el.innerHTML = html;
@@ -238,7 +238,7 @@ const View = () =>  {
             var download_name = _getDownloadName() + '.json';
             var download_data =JSON.stringify(data, null, 2);
             var anchor = document.createElement('a');
-            var dataBlob = new Blob([download_data], {type: "octet/stream"});
+            var dataBlob = new Blob([download_data], {type: "application/json"});
             var data_url = window.URL.createObjectURL(dataBlob);
             anchor.setAttribute('href', data_url);
             anchor.setAttribute('download', download_name);
